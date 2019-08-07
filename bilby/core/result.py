@@ -475,6 +475,8 @@ class Result(object):
             for key in dictionary['sampler_kwargs']:
                 if hasattr(dictionary['sampler_kwargs'][key], '__call__'):
                     dictionary['sampler_kwargs'][key] = str(dictionary['sampler_kwargs'])
+                if key == "pool":
+                    dictionary['sampler_kwargs'][key] = str(dictionary['sampler_kwargs'][key])
 
         try:
             if extension == 'json':

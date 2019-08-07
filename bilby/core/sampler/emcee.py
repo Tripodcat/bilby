@@ -15,6 +15,17 @@ from ..utils import (
     logger, get_progress_bar, check_directory_exists_and_if_not_mkdir)
 from .base_sampler import MCMCSampler, SamplerError
 
+# >>> xc
+try:
+    from .. import GLOBAL
+    from mpi4py import MPI
+    # GLOBAL.py is actually empty. It stores global sampler for mpi
+    def mpi_lnpostfn(theta):
+        # sampler is Emcee
+        return GLOBAL.sampler.lnpostfn(theta)
+except:
+    print("GLOBAL.py not found! Run without MPI")
+## <<<
 
 class Emcee(MCMCSampler):
     """bilby wrapper emcee (https://github.com/dfm/emcee)
@@ -124,8 +135,14 @@ class Emcee(MCMCSampler):
                        for key, value in self.kwargs.items()
                        if key not in self.sampler_function_kwargs}
 
-        init_kwargs['lnpostfn'] = self.lnpostfn
+        #init_kwargs['lnpostfn'] = self.lnpostfn  # xc
+        # >>> xc
+        if MPI.COMM_WORLD.Get_size() == 1:
+            init_kwargs['lnpostfn'] = self.lnpostfn
+        else:
+            init_kwargs['lnpostfn'] = mpi_lnpostfn
         init_kwargs['dim'] = self.ndim
+        # <<<
 
         # updated init keywords for emcee > v2.2.1
         updatekeys = {'dim': 'ndim',
@@ -349,17 +366,19 @@ class Emcee(MCMCSampler):
         # main iteration loop
         for sample in tqdm(
                 self.sampler.sample(iterations=iterations, **sampler_function_kwargs),
-                total=iterations):
+                total=iterations, file=sys.stdout):
             self.write_chains_to_file(sample)
-        self.checkpoint()
+        #self.checkpoint()
 
         self.result.sampler_output = np.nan
         blobs_flat = np.array(self.sampler.blobs).reshape((-1, 2))
         log_likelihoods, log_priors = blobs_flat.T
-        chain = self.sampler.chain.reshape((-1, self.ndim))
+        #chain = self.sampler.chain.reshape((-1, self.ndim))
+        chain = self.sampler.chain.transpose(1,0,2).reshape((-1, self.ndim))
         log_ls = log_likelihoods
         log_ps = log_priors
-        self.calculate_autocorrelation(chain)
+        #self.calculate_autocorrelation(chain)
+        self.calculate_autocorrelation(self.sampler.chain.reshape((-1, self.ndim)))
         self.print_nburn_logging_info()
         self.calc_likelihood_count()
         self.result.nburn = self.nburn

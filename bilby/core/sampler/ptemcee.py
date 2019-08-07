@@ -9,6 +9,7 @@ from ..utils import logger, get_progress_bar
 from . import Emcee
 from .base_sampler import SamplerError
 
+import sys # Xia
 
 class Ptemcee(Emcee):
     """bilby wrapper ptemcee (https://github.com/willvousden/ptemcee)
@@ -124,9 +125,9 @@ class Ptemcee(Emcee):
         for pos, logpost, loglike in tqdm(
                 self.sampler.sample(self.pos0, iterations=iterations,
                                     **sampler_function_kwargs),
-                total=iterations):
+                total=iterations, file=sys.stdout):
             self.write_chains_to_file(pos, loglike, logpost)
-        self.checkpoint()
+        #self.checkpoint()
 
         self.calculate_autocorrelation(self.sampler.chain.reshape((-1, self.ndim)))
         self.result.sampler_output = np.nan
@@ -139,8 +140,11 @@ class Ptemcee(Emcee):
                 "The run has finished, but the chain is not burned in: "
                 "`nburn < nsteps`. Try increasing the number of steps.")
         self.calc_likelihood_count()
-        self.result.samples = self.sampler.chain[0, :, self.nburn:, :].reshape(
-            (-1, self.ndim))
+        #self.result.samples = self.sampler.chain[0, :, self.nburn:, :].reshape(
+        #    (-1, self.ndim))
+        self.result.samples = self.sampler.chain[0, :, self.nburn:, :].transpose(1,0,2).reshape(
+            (-1, self.ndim)) # xc
+        
         self.result.walkers = self.sampler.chain[0, :, :, :]
 
         n_samples = self.nwalkers * self.nburn

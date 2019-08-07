@@ -278,7 +278,7 @@ class Sampler(object):
                 "Have you specified all the parameters:\n{}"
                 .format(e, self.likelihood.parameters))
 
-    def _time_likelihood(self, n_evaluations=100):
+    def _time_likelihood(self, n_evaluations=10):
         """ Times the likelihood evaluation and print an info message
 
         Parameters

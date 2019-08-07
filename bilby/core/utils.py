@@ -1,7 +1,7 @@
 from __future__ import division
 
 import logging
-import os
+import os, sys
 from math import fmod
 import argparse
 import traceback
@@ -382,7 +382,7 @@ def setup_logger(outdir=None, label=None, log_level='INFO', print_version=False)
     logger.setLevel(level)
 
     if any([type(h) == logging.StreamHandler for h in logger.handlers]) is False:
-        stream_handler = logging.StreamHandler()
+        stream_handler = logging.StreamHandler(sys.stdout)
         stream_handler.setFormatter(logging.Formatter(
             '%(asctime)s %(name)s %(levelname)-8s: %(message)s', datefmt='%H:%M'))
         stream_handler.setLevel(level)
