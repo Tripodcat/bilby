@@ -1,6 +1,56 @@
 # All notable changes will be documented in this file
 
-## Unreleased
+## [0.5.8] 2019-09-26
+
+### Added
+- Progress bar in post-processing step
+
+### Changed
+- Fixed implementation of calibration !607
+- Fixed interaction with dynesty for reflective bounds !604
+- Fixed behaviour of n_effective with check pointing !603
+- Fixed testing of constants !605
+- Fixed bug in bilby_result with python2.7
+
+## [0.5.7] 2019-09-19
+
+### Added
+- bilby_convert_resume file CL tool for converting dynesty resume files into preresults !599
+
+### Changes
+- Change the constants (Msun, REarth etc) to match the values in LAL !597
+- Change the Greenwhich Mean Sidereal Time conversion to match the method in LAL !597
+- Update dynesty requirement to 1.0.0
+- Improve integration of bounds with dynesty !589
+- Fixed issue with mutable default argument !596
+- Allow the use of n_effective in dynesty !592
+- Allow the use of n_periodic in cpnest !591
+- Fix bug in dt calc
+
+## [0.5.6] 2019-09-04
+
+### Changes
+- Deprecation of the old helper functions (e.g., fetch open data)
+- Improvements to the documentation
+- Fix a bug in the dt calculations of the GW likelihood
+- Various small bug fixes
+
+### Added
+- LAL version information in the meta data
+
+## [0.5.5] 2019-08-22
+
+### Added
+- Reading/writing of the prior in a JSON format
+- Checks for marginalization flags
+
+### Changes
+- Improvements to the examples: reorganisation and fixing bugs
+- Fixed bug with scipy>=1.3.0 and spline
+- Removed the sqrt(2) normalisation from the scalar longitudinal mode
+- Improve PSD filename reading (no longer required "/" to read local files)
+- Fix bug in emcee chains
+- Added a try/except cluase for building the lookup table
 
 ## [0.5.4] 2019-07-30
 

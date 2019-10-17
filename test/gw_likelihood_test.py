@@ -42,7 +42,7 @@ class TestBasicGWTransient(unittest.TestCase):
         """Test log likelihood matches precomputed value"""
         self.likelihood.log_likelihood()
         self.assertAlmostEqual(self.likelihood.log_likelihood(),
-                               -4055.236283345252, 3)
+                               -4055.25243177871, 3)
 
     def test_log_likelihood_ratio(self):
         """Test log likelihood ratio returns the correct value"""
@@ -111,7 +111,7 @@ class TestGWTransient(unittest.TestCase):
         """Test log likelihood matches precomputed value"""
         self.likelihood.log_likelihood()
         self.assertAlmostEqual(self.likelihood.log_likelihood(),
-                               -4055.236283345252, 3)
+                               -4055.25243177871, 3)
 
     def test_log_likelihood_ratio(self):
         """Test log likelihood ratio returns the correct value"""
@@ -158,7 +158,8 @@ class TestGWTransient(unittest.TestCase):
                 self.waveform_generator.frequency_domain_source_model),
             sampling_frequency=self.waveform_generator.sampling_frequency,
             duration=self.waveform_generator.duration,
-            start_time=self.waveform_generator.start_time)
+            start_time=self.waveform_generator.start_time,
+            lal_version=self.likelihood.lal_version)
         self.assertDictEqual(expected, self.likelihood.meta_data)
 
 
